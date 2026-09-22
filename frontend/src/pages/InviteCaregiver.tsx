@@ -19,7 +19,7 @@ export default function InviteCaregiver() {
   return (
     <div>
       <h1>Invite a caregiver</h1>
-      <p>Share this link with your spouse (or another caregiver) so they can join this baby's log.</p>
+      <p>Share this link with your spouse (or another caregiver) so they can join this baby&rsquo;s log.</p>
       <button aria-label="Generate a new invite link" onClick={generate}>
         Generate invite link
       </button>

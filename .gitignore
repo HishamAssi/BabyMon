@@ -29,3 +29,4 @@ Thumbs.db
 # Vite / PWA build output
 frontend/dist/
 frontend/dev-dist/
+*.tsbuildinfo

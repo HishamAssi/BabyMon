@@ -7,7 +7,11 @@ import { loadCaregivers } from "../data/caregivers.js";
 import SleepStatus from "../components/SleepStatus.js";
 import type { CareEvent } from "../data/db.js";
 
-const LABEL: Record<StatusSummary["type"], string> = { feed: "🍼 Last feed", diaper: "🧷 Last diaper", sleep: "😴 Last sleep ended" };
+const LABEL: Partial<Record<StatusSummary["type"], string>> = {
+  feed: "🍼 Last feed",
+  diaper: "🧷 Last diaper",
+  sleep: "😴 Last sleep ended"
+};
 
 /** T034 — FR-008, SC-005: at-a-glance status without scrolling. */
 export default function BabyStatus() {

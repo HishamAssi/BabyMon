@@ -2,7 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { eq, and } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { db } from "../db/index.js";
-import { babyProfiles, caregiverBabyAccess, households } from "../db/schema.js";
+import { babyProfiles, caregiverBabyAccess } from "../db/schema.js";
 import { requireAuth } from "../auth/device-auth.js";
 
 /**

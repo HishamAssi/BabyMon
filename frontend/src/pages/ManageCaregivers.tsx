@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api, getActiveBabyId, getCaregiverId } from "../data/apiClient.js";
 import type { CaregiverSummary } from "../data/caregivers.js";
 
@@ -8,15 +8,15 @@ export default function ManageCaregivers() {
   const myId = getCaregiverId();
   const [caregivers, setCaregivers] = useState<CaregiverSummary[]>([]);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     if (!babyId) return;
     const { caregivers } = await api.get<{ caregivers: CaregiverSummary[] }>(`/babies/${babyId}/caregivers`);
     setCaregivers(caregivers.filter((c) => c.status === "active"));
-  }
+  }, [babyId]);
 
   useEffect(() => {
     refresh();
-  }, [babyId]);
+  }, [refresh]);
 
   async function revoke(caregiverId: string) {
     if (!babyId) return;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api, getActiveBabyId } from "../data/apiClient.js";
 import {
   requestNotificationPermission,
@@ -16,11 +16,11 @@ export default function Reminders() {
   const [hours, setHours] = useState("3");
   const [banner, setBanner] = useState<string | null>(null);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     if (!babyId) return;
     const { reminders } = await api.get<{ reminders: ReminderWithDueAt[] }>(`/babies/${babyId}/reminders`);
     setReminders(reminders);
-  }
+  }, [babyId]);
 
   useEffect(() => {
     if (!babyId) return;
@@ -31,7 +31,7 @@ export default function Reminders() {
       refresh();
     });
     return () => clearInterval(interval);
-  }, [babyId]);
+  }, [babyId, refresh]);
 
   async function submit() {
     if (!babyId || !hours) return;

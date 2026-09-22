@@ -11,6 +11,7 @@ export default tseslint.config(
     plugins: { react, "react-hooks": reactHooks },
     rules: {
       ...react.configs.recommended.rules,
+      ...react.configs["jsx-runtime"].rules, // React 17+ automatic JSX runtime — no `import React` needed
       ...reactHooks.configs.recommended.rules
     },
     settings: { react: { version: "detect" } }

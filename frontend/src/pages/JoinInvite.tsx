@@ -42,8 +42,8 @@ export default function JoinInvite() {
   if (history) {
     return (
       <div>
-        <h1>You're in!</h1>
-        <p>Here's what's already been logged for this baby:</p>
+        <h1>You&rsquo;re in!</h1>
+        <p>Here&rsquo;s what&rsquo;s already been logged for this baby:</p>
         <EventList events={history} />
         {/* Full reload (not client-side nav): App decides Onboarding vs MainApp from
             isJoined() at mount time, and that needs to be re-evaluated now. */}
@@ -54,7 +54,7 @@ export default function JoinInvite() {
 
   return (
     <div>
-      <h1>Join this baby's log</h1>
+      <h1>Join this baby&rsquo;s log</h1>
       <label htmlFor="displayName">
         Your name
         <input

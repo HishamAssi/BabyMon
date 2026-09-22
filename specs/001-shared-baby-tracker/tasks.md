@@ -159,9 +159,9 @@ Web application layout per `plan.md`: `backend/src/`, `backend/tests/`, `fronten
 - [X] T046 [P] Add structured request logging across backend handlers in `backend/src/api/`
 - [X] T047 [P] Add rate-limiting to invite redemption in `backend/src/api/invites.ts`
 - [X] T048 [P] Write `deploy/README.md` documenting self-hosting and remote-access setup (from quickstart.md)
-- [ ] T049 Run `quickstart.md` validation end-to-end across three devices
+- [X] T049 Run `quickstart.md` validation end-to-end across three devices
 - [X] T050 [P] Accessibility pass (keyboard nav, contrast, screen-reader labels) on Log Event, Timeline, and Invite flows
-- [ ] T051 Hash CaregiverDevice tokens at rest and enforce invite-code expiry in `backend/src/auth/`
+- [X] T051 Hash CaregiverDevice tokens at rest and enforce invite-code expiry in `backend/src/auth/`
 
 ---
 

@@ -62,13 +62,23 @@ async function sendCatchUp(socket: WebSocket, caregiverId: string, since: number
   }
 }
 
-export function registerSyncSocket(app: FastifyInstance) {
-  app.get<{ Querystring: { token?: string; since?: string } }>(
-    "/sync",
-    { websocket: true },
-    async (connection, request) => {
-      const socket = connection.socket as WebSocket;
-      const { token, since } = request.query;
+export async function registerSyncSocket(app: FastifyInstance) {
+  // Registered via a nested plugin (not a bare app.get call) so avvio loads
+  // it strictly after @fastify/websocket has finished registering — that
+  // plugin's onRoute hook (which rewires `{ websocket: true }` routes to
+  // receive (socket, request) instead of (request, reply)) only applies to
+  // routes declared after it has actually run, not just been `.register()`ed.
+  await app.register(async (instance) => {
+    instance.get(
+      "/sync",
+      { websocket: true },
+      async (socket, request) => {
+      // @fastify/websocket runs its handler during preParsing, before Fastify's
+      // normal querystring parsing — request.query is unpopulated at this point,
+      // so parse the raw URL directly.
+      const url = new URL(request.raw.url ?? "", "http://internal");
+      const token = url.searchParams.get("token") ?? undefined;
+      const since = url.searchParams.get("since") ?? undefined;
 
       if (!token) {
         socket.close(4001, "missing_token");
@@ -94,6 +104,7 @@ export function registerSyncSocket(app: FastifyInstance) {
       });
 
       socket.on("close", () => connections.delete(conn));
-    }
-  );
+      }
+    );
+  });
 }

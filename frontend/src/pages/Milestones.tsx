@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { api, getActiveBabyId, getDeviceToken } from "../data/apiClient.js";
 import { caregiverName, loadCaregivers } from "../data/caregivers.js";
 
@@ -18,15 +18,15 @@ export default function Milestones() {
   const [description, setDescription] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     if (!babyId) return;
     const { milestones } = await api.get<{ milestones: Milestone[] }>(`/babies/${babyId}/milestones`);
     setItems([...milestones].sort((a, b) => b.date.localeCompare(a.date)));
-  }
+  }, [babyId]);
 
   useEffect(() => {
     if (babyId) loadCaregivers(babyId).then(refresh);
-  }, [babyId]);
+  }, [babyId, refresh]);
 
   async function submit() {
     if (!babyId || !description.trim()) return;

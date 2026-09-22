@@ -6,6 +6,7 @@ type SyncMessage = {
   entity: "care_event" | "growth_measurement" | "milestone" | "reminder" | "caregiver_access";
   op: "create" | "update" | "delete";
   record: Record<string, unknown>;
+  cursor?: string;
 };
 
 type Listener = () => void;

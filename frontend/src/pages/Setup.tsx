@@ -30,9 +30,9 @@ export default function Setup() {
   return (
     <div>
       <h1>Welcome to BabyMon</h1>
-      <p>Let's set up your baby's shared profile.</p>
+      <p>Let&rsquo;s set up your baby&rsquo;s shared profile.</p>
       <label>
-        Baby's name
+        Baby&rsquo;s name
         <input value={babyName} onChange={(e) => setBabyName(e.target.value)} />
       </label>
       <label>

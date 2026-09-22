@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { api, getActiveBabyId } from "../data/apiClient.js";
 import { caregiverName, loadCaregivers } from "../data/caregivers.js";
 
@@ -20,15 +20,15 @@ export default function Growth() {
   const [lengthCm, setLengthCm] = useState("");
   const [headCm, setHeadCm] = useState("");
 
-  async function refresh() {
+  const refresh = useCallback(async () => {
     if (!babyId) return;
     const { measurements } = await api.get<{ measurements: GrowthMeasurement[] }>(`/babies/${babyId}/growth`);
     setMeasurements([...measurements].sort((a, b) => b.date.localeCompare(a.date)));
-  }
+  }, [babyId]);
 
   useEffect(() => {
     if (babyId) loadCaregivers(babyId).then(refresh);
-  }, [babyId]);
+  }, [babyId, refresh]);
 
   async function submit() {
     if (!babyId || !date) return;
