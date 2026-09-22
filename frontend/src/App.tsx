@@ -9,6 +9,7 @@ import ManageCaregivers from "./pages/ManageCaregivers.js";
 import Growth from "./pages/Growth.js";
 import Milestones from "./pages/Milestones.js";
 import Reminders from "./pages/Reminders.js";
+import Stats from "./pages/Stats.js";
 import Setup from "./pages/Setup.js";
 import { api, isJoined, getActiveBabyId } from "./data/apiClient.js";
 import { connectSync } from "./data/syncClient.js";
@@ -25,6 +26,7 @@ function MainApp() {
         <Link to="/">Status</Link>
         <Link to="/timeline">Timeline</Link>
         <Link to="/log">Log Event</Link>
+        <Link to="/stats">Stats</Link>
         <Link to="/growth">Growth</Link>
         <Link to="/milestones">Milestones</Link>
         <Link to="/reminders">Reminders</Link>
@@ -35,6 +37,7 @@ function MainApp() {
         <Route path="/" element={<BabyStatus />} />
         <Route path="/timeline" element={<Timeline />} />
         <Route path="/log" element={<LogEvent />} />
+        <Route path="/stats" element={<Stats />} />
         <Route path="/growth" element={<Growth />} />
         <Route path="/milestones" element={<Milestones />} />
         <Route path="/reminders" element={<Reminders />} />
