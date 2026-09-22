@@ -1,0 +1,77 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { api, storeDeviceIdentity, isJoined } from "../data/apiClient.js";
+import { listEvents } from "../data/careEvents.js";
+import { loadCaregivers } from "../data/caregivers.js";
+import { connectSync, flushPendingQueue } from "../data/syncClient.js";
+import EventList from "../components/EventList.js";
+import type { CareEvent } from "../data/db.js";
+
+/** T030/T032 — FR-020, FR-022. Redeem an invite; on success, show existing history (not empty). */
+export default function JoinInvite() {
+  const { code } = useParams<{ code: string }>();
+  const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [history, setHistory] = useState<CareEvent[] | null>(null);
+
+  useEffect(() => {
+    if (isJoined()) navigate("/", { replace: true });
+  }, [navigate]);
+
+  async function redeem() {
+    if (!code || !displayName.trim()) return;
+    setError(null);
+    try {
+      const { deviceToken, caregiverId, babyId } = await api.post<{
+        deviceToken: string;
+        caregiverId: string;
+        babyId: string;
+      }>(`/invites/${code}/redeem`, { displayName });
+      storeDeviceIdentity(deviceToken, caregiverId, babyId);
+
+      await loadCaregivers(babyId, true);
+      await flushPendingQueue(babyId); // pulls existing server history into the local store
+      connectSync(babyId);
+      setHistory(await listEvents(babyId));
+    } catch {
+      setError("This invite link is invalid or has expired.");
+    }
+  }
+
+  if (history) {
+    return (
+      <div>
+        <h1>You're in!</h1>
+        <p>Here's what's already been logged for this baby:</p>
+        <EventList events={history} />
+        {/* Full reload (not client-side nav): App decides Onboarding vs MainApp from
+            isJoined() at mount time, and that needs to be re-evaluated now. */}
+        <button onClick={() => (window.location.href = "/")}>Continue</button>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h1>Join this baby's log</h1>
+      <label htmlFor="displayName">
+        Your name
+        <input
+          id="displayName"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
+          placeholder="e.g. Husband"
+        />
+      </label>
+      <button aria-label="Join this baby's shared log" onClick={redeem} disabled={!displayName.trim()}>
+        Join
+      </button>
+      {error && (
+        <p role="alert" style={{ color: "crimson" }}>
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}

@@ -20,6 +20,13 @@ A review of the current leading baby-tracking apps (Huckleberry, Robin Baby, Nar
 
 These findings shaped the priorities and requirements below.
 
+## Clarifications
+
+### Session 2026-09-21
+
+- Q: Should one self-hosted instance serve exactly one household, or should it support multiple independent households requiring data isolation? → A: One self-hosted instance = one household; no cross-household isolation is needed.
+- Q: After joining via invite-link/code (no password), how does a caregiver's identity persist across app sessions and devices? → A: Joining is a one-time action per device that then remembers the caregiver on that device; a caregiver can also join additional devices under their same identity (e.g., a phone and a laptop both recognized as "Husband") rather than each device creating a separate, unrelated caregiver record.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Log a care event and have it appear for the other caregiver (Priority: P1)
@@ -107,6 +114,7 @@ Based on the interval a caregiver sets (e.g., "feed every 3 hours" or a medicine
 - What happens when two caregivers' devices have different clock times? Event ordering in the shared timeline should reflect when the event actually happened as reported by the logging caregiver, and should not visibly reorder based on device clock drift alone.
 - What happens when a household has more than one baby? Caregivers must be able to switch between multiple baby profiles without their logs mixing together.
 - What happens when the locally-hosted server is temporarily unreachable? Caregivers should still be able to log events on their device and have them sync automatically once the server is reachable again.
+- What happens when a caregiver joins from a second device (e.g., the same person adds their laptop after already using their phone)? Entries they log from either device must be attributed to the same single caregiver identity, not treated as two different caregivers.
 
 ## Requirements *(mandatory)*
 
@@ -133,11 +141,13 @@ Based on the interval a caregiver sets (e.g., "feed every 3 hours" or a medicine
 - **FR-019**: System MUST remain reachable and usable by caregivers over the internet when they are away from the home network where it is hosted (e.g., at work, running errands), not only while connected to the home network.
 - **FR-020**: System MUST authenticate each caregiver via a lightweight invite-link or invite-code join flow, without requiring a separate password to be created and remembered per caregiver.
 - **FR-021**: System MUST support an unlimited (open-ended) number of caregivers per baby profile, with every linked caregiver receiving equal ability to log, edit, and delete entries — no view-only or restricted roles.
+- **FR-022**: System MUST remember a caregiver's identity on a device after they join, so they are not required to re-enter the invite-link/code on every use.
+- **FR-023**: System MUST allow the same caregiver to join and be recognized under their same identity on more than one device (e.g., a phone and a laptop both showing entries as logged by "Husband"), rather than creating a separate, disconnected caregiver record per device.
 
 ### Key Entities *(include if feature involves data)*
 
-- **Household**: The family unit that owns and hosts an instance of the application; contains one or more caregivers and one or more baby profiles.
-- **Caregiver**: A person with access to log and view data for one or more baby profiles (e.g., a parent, grandparent, or nanny); has an identity used to attribute logged entries and an access status (active/revoked) per baby profile.
+- **Household**: The family unit that owns and hosts a single instance of the application; each self-hosted instance belongs to exactly one household and contains that household's caregivers and baby profiles only — the application does not need to isolate data between multiple households sharing one instance.
+- **Caregiver**: A person (not a device) with access to log and view data for one or more baby profiles (e.g., a parent, grandparent, or nanny); has one identity used to attribute logged entries across all of that person's devices, and an access status (active/revoked) per baby profile.
 - **Baby Profile**: Represents one child being tracked; has a name and birthdate, and is linked to the caregivers who may log entries for it.
 - **Care Event**: A single logged occurrence — feeding, diaper change, sleep session (with start and optional end time), or pumping session — with a timestamp, the logging caregiver, and optional notes.
 - **Growth Measurement**: A dated record of weight, length/height, and/or head circumference for a baby profile.
@@ -163,4 +173,4 @@ Based on the interval a caregiver sets (e.g., "feed every 3 hours" or a medicine
 - A baby profile supports an unlimited number of linked caregivers, all with equal edit access; there is no view-only or restricted role in this version.
 - Caregiver access is granted via invite-link/code rather than per-caregiver passwords; safeguarding the household's invite links/codes is treated as the household's own responsibility.
 - Historical data is retained indefinitely by default; no automatic data expiration or retention limit is assumed unless a caregiver explicitly deletes an entry.
-- Notifications/reminders are delivered to whichever of the three surfaces (web, iOS, Android) the caregiver is actively using or has enabled notifications on; the specific delivery mechanism is an implementation detail left to the planning phase.
+- Notifications/reminders are delivered to every device on which a caregiver has joined and enabled notifications, not just their most recently used device; the specific delivery mechanism is an implementation detail left to the planning phase.

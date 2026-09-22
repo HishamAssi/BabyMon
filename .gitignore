@@ -1,0 +1,31 @@
+# Node
+node_modules/
+dist/
+build/
+*.log
+.env
+.env.*
+!.env.example
+
+# SQLite data (self-hosted household data — never committed)
+*.sqlite
+*.sqlite-journal
+*.sqlite-shm
+*.sqlite-wal
+backend/data/
+
+# Coverage / test artifacts
+coverage/
+playwright-report/
+test-results/
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Vite / PWA build output
+frontend/dist/
+frontend/dev-dist/

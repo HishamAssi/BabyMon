@@ -32,4 +32,5 @@
 ## Notes
 
 - Items marked incomplete require spec updates before `/speckit-clarify` or `/speckit-plan`
-- All items pass. FR-019, FR-020, and FR-021 were resolved via user clarification: remote (internet) accessibility, invite-link/code authentication (no passwords), and unlimited caregivers with equal edit access.
+- All items pass. FR-019, FR-020, and FR-021 were resolved via user clarification during `/speckit-specify`: remote (internet) accessibility, invite-link/code authentication (no passwords), and unlimited caregivers with equal edit access.
+- Two further clarifications resolved during `/speckit-clarify`: single-household-per-instance data model (FR unaffected, Household entity clarified), and per-caregiver (not per-device) identity persisting across multiple devices (FR-022, FR-023 added).

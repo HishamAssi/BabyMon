@@ -1,0 +1,17 @@
+services:
+  babymon:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - babymon-data:/data
+    environment:
+      - DB_PATH=/data/babymon.sqlite
+      - PORT=3000
+      # - INVITE_EXPIRY_DAYS=7
+    restart: unless-stopped
+
+volumes:
+  babymon-data:

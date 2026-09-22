@@ -1,0 +1,14 @@
+node_modules/
+**/node_modules/
+.git/
+*.log
+.env
+.env.*
+!.env.example
+coverage/
+playwright-report/
+test-results/
+.DS_Store
+backend/data/
+*.sqlite*
+frontend/dev-dist/
