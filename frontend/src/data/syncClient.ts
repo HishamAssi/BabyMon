@@ -45,6 +45,9 @@ async function applyCareEventRecord(record: Record<string, unknown>) {
     loggedByCaregiverId: String(record.loggedByCaregiverId),
     lastModifiedByCaregiverId: String(record.lastModifiedByCaregiverId),
     notes: record.notes as string | undefined,
+    feedType: (record.feedType as CareEvent["feedType"]) ?? null,
+    amountOz: (record.amountOz as number | null | undefined) ?? null,
+    diaperContents: (record.diaperContents as CareEvent["diaperContents"]) ?? null,
     deletedAt: toIso(record.deletedAt),
     updatedAt: toIso(record.updatedAt)!
   };
@@ -62,13 +65,19 @@ export async function flushPendingQueue(babyId: string) {
           type: event.type,
           startTime: event.startTime,
           endTime: event.endTime ?? undefined,
-          notes: event.notes
+          notes: event.notes,
+          feedType: event.feedType ?? undefined,
+          amountOz: event.amountOz ?? undefined,
+          diaperContents: event.diaperContents ?? undefined
         });
       } else if (event.pendingOp === "update") {
         await api.patch(`/babies/${babyId}/events/${event.id}`, {
           startTime: event.startTime,
           endTime: event.endTime ?? undefined,
-          notes: event.notes
+          notes: event.notes,
+          feedType: event.feedType ?? undefined,
+          amountOz: event.amountOz ?? undefined,
+          diaperContents: event.diaperContents ?? undefined
         });
       } else if (event.pendingOp === "delete") {
         await api.delete(`/babies/${babyId}/events/${event.id}`).catch(() => undefined); // ok if already gone
@@ -82,7 +91,8 @@ export async function flushPendingQueue(babyId: string) {
   notify();
 }
 
-async function pollCatchUp(babyId: string) {
+/** FR-002, and US2 Acceptance Scenario 3 (join shows existing history, not empty) — pulls everything since the local cursor. */
+export async function pollCatchUp(babyId: string) {
   const since = getCursor(babyId);
   const { events, cursor } = await api.get<{ events: Record<string, unknown>[]; cursor: string }>(
     `/babies/${babyId}/events?since=${since}`
