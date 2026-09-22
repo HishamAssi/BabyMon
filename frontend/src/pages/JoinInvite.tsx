@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { api, storeDeviceIdentity, isJoined } from "../data/apiClient.js";
 import { listEvents } from "../data/careEvents.js";
 import { loadCaregivers } from "../data/caregivers.js";
-import { connectSync, flushPendingQueue } from "../data/syncClient.js";
+import { connectSync, pollCatchUp } from "../data/syncClient.js";
 import EventList from "../components/EventList.js";
 import type { CareEvent } from "../data/db.js";
 
@@ -31,7 +31,7 @@ export default function JoinInvite() {
       storeDeviceIdentity(deviceToken, caregiverId, babyId);
 
       await loadCaregivers(babyId, true);
-      await flushPendingQueue(babyId); // pulls existing server history into the local store
+      await pollCatchUp(babyId); // pulls existing server history into the local store
       connectSync(babyId);
       setHistory(await listEvents(babyId));
     } catch {

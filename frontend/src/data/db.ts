@@ -1,6 +1,8 @@
 import Dexie, { type Table } from "dexie";
 
 export type CareEventType = "feed" | "diaper" | "sleep" | "pumping";
+export type FeedType = "breastfeed" | "formula";
+export type DiaperContents = "pee" | "poop" | "both";
 
 export interface CareEvent {
   id: string; // client-generated UUID — the sync idempotency key
@@ -11,6 +13,11 @@ export interface CareEvent {
   loggedByCaregiverId: string;
   lastModifiedByCaregiverId: string;
   notes?: string;
+  // 002-care-event-details — feedType required for "feed", amountOz optional for
+  // "feed" (formula only) & "pumping", diaperContents required for "diaper".
+  feedType?: FeedType | null;
+  amountOz?: number | null;
+  diaperContents?: DiaperContents | null;
   deletedAt: string | null;
   updatedAt: string;
   /**

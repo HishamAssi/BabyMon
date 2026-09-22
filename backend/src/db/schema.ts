@@ -1,4 +1,4 @@
-import { sqliteTable, text, integer } from "drizzle-orm/sqlite-core";
+import { sqliteTable, text, integer, real } from "drizzle-orm/sqlite-core";
 
 // --- Base entities (T005) ---------------------------------------------
 
@@ -71,6 +71,12 @@ export const careEvents = sqliteTable("care_events", {
     .notNull()
     .references(() => caregivers.id),
   notes: text("notes"),
+  // 002-care-event-details: feed method + amount (formula only), diaper classification.
+  // amountOz is also reused for pumping's optional amount — same "ounces" semantic, no
+  // need for a second column (see data-model.md).
+  feedType: text("feed_type", { enum: ["breastfeed", "formula"] }),
+  amountOz: real("amount_oz"),
+  diaperContents: text("diaper_contents", { enum: ["pee", "poop", "both"] }),
   deletedAt: integer("deleted_at", { mode: "timestamp_ms" }), // soft delete (tombstone) for sync
   createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
   updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull()

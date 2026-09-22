@@ -9,7 +9,14 @@ function nowIso() {
 export async function createLocalEvent(
   babyId: string,
   type: CareEventType,
-  opts: { startTime?: string; endTime?: string | null; notes?: string } = {}
+  opts: {
+    startTime?: string;
+    endTime?: string | null;
+    notes?: string;
+    feedType?: CareEvent["feedType"];
+    amountOz?: CareEvent["amountOz"];
+    diaperContents?: CareEvent["diaperContents"];
+  } = {}
 ): Promise<CareEvent> {
   const caregiverId = getCaregiverId();
   if (!caregiverId) throw new Error("not_joined");
@@ -23,6 +30,9 @@ export async function createLocalEvent(
     loggedByCaregiverId: caregiverId,
     lastModifiedByCaregiverId: caregiverId,
     notes: opts.notes,
+    feedType: opts.feedType ?? null,
+    amountOz: opts.amountOz ?? null,
+    diaperContents: opts.diaperContents ?? null,
     deletedAt: null,
     updatedAt: nowIso(),
     pendingOp: "create"
@@ -31,10 +41,13 @@ export async function createLocalEvent(
   return event;
 }
 
-/** FR-006 — e.g. closing an in-progress sleep session. */
+/** FR-006, FR-010 — e.g. closing an in-progress sleep session, or correcting a
+ * feed/diaper entry's recorded detail. */
 export async function updateLocalEvent(
   id: string,
-  patch: Partial<Pick<CareEvent, "endTime" | "notes" | "startTime">>
+  patch: Partial<
+    Pick<CareEvent, "endTime" | "notes" | "startTime" | "feedType" | "amountOz" | "diaperContents">
+  >
 ) {
   const caregiverId = getCaregiverId();
   if (!caregiverId) throw new Error("not_joined");
