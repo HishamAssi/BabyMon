@@ -1,0 +1,67 @@
+@theme inline {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--border));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-warning: hsl(var(--warning));
+  --color-warning-foreground: hsl(var(--warning-foreground));
+  --color-ring: hsl(var(--ring));
+  --color-feed: hsl(var(--feed));
+  --color-diaper: hsl(var(--diaper));
+  --color-sleep: hsl(var(--sleep));
+  --color-pumping: hsl(var(--pumping));
+}
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222 20% 15%;
+  --card: 0 0% 100%;
+  --muted: 220 14% 96%;
+  --muted-foreground: 220 9% 46%;
+  --border: 220 13% 91%;
+  --primary: 217 89% 61%;
+  --primary-foreground: 0 0% 100%;
+  --accent: 220 14% 96%;
+  --accent-foreground: 222 20% 15%;
+  --destructive: 348 83% 47%;
+  --destructive-foreground: 0 0% 100%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 24 60% 15%;
+  --ring: 217 89% 61%;
+  --feed: 217 89% 61%;
+  --diaper: 38 78% 62%;
+  --sleep: 262 47% 55%;
+  --pumping: 187 68% 42%;
+}
+
+.dark {
+  --background: 222 20% 10%;
+  --foreground: 210 20% 96%;
+  --card: 222 18% 13%;
+  --muted: 217 19% 18%;
+  --muted-foreground: 215 14% 65%;
+  --border: 217 19% 22%;
+  --primary: 217 89% 66%;
+  --primary-foreground: 222 20% 10%;
+  --accent: 217 19% 18%;
+  --accent-foreground: 210 20% 96%;
+  --destructive: 350 78% 60%;
+  --destructive-foreground: 222 20% 10%;
+  --warning: 38 85% 60%;
+  --warning-foreground: 24 60% 12%;
+  --ring: 217 89% 66%;
+  --feed: 217 89% 66%;
+  --diaper: 38 82% 66%;
+  --sleep: 262 60% 68%;
+  --pumping: 187 65% 55%;
+}

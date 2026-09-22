@@ -12,7 +12,8 @@ export default tseslint.config(
     rules: {
       ...react.configs.recommended.rules,
       ...react.configs["jsx-runtime"].rules, // React 17+ automatic JSX runtime — no `import React` needed
-      ...reactHooks.configs.recommended.rules
+      ...reactHooks.configs.recommended.rules,
+      "react/prop-types": "off" // TypeScript is the source of truth for prop types; this project has no PropTypes
     },
     settings: { react: { version: "detect" } }
   },

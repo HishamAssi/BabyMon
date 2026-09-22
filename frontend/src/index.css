@@ -1,33 +1,10 @@
-:root {
-  color-scheme: light dark;
-  font-family: system-ui, -apple-system, sans-serif;
-}
+@import "tailwindcss";
+@import "./styles/tokens.css";
 
-body {
-  margin: 0;
-  padding: 16px;
-  max-width: 640px;
-  margin-inline: auto;
-}
+@custom-variant dark (&:where(.dark, .dark *));
 
-button {
-  font-size: 1rem;
-  padding: 0.6em 1em;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-}
-
-nav {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 16px;
-}
-
-nav a {
-  text-decoration: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  background: color-mix(in srgb, currentColor 8%, transparent);
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
 }

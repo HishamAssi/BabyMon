@@ -18,11 +18,11 @@ export default function Timeline() {
     return onSyncUpdate(refresh);
   }, [babyId]);
 
-  if (!babyId) return <p>Join a baby profile first (see Invite page).</p>;
+  if (!babyId) return <p className="text-muted-foreground">Join a baby profile first (see Invite page).</p>;
 
   return (
     <div>
-      <h1>Timeline</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Timeline</h1>
       <EventList events={events} />
     </div>
   );

@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api, getActiveBabyId, getDeviceToken } from "../data/apiClient.js";
 import { caregiverName, loadCaregivers } from "../data/caregivers.js";
+import { Button } from "../components/ui/button.js";
+import { Input } from "../components/ui/input.js";
+import { Label } from "../components/ui/label.js";
 
 interface Milestone {
   id: string;
@@ -48,31 +51,44 @@ export default function Milestones() {
     refresh();
   }
 
-  if (!babyId) return <p>Join a baby profile first.</p>;
+  if (!babyId) return <p className="text-muted-foreground">Join a baby profile first.</p>;
 
   return (
     <div>
-      <h1>Milestones</h1>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16, alignItems: "center" }}>
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        <input
-          placeholder="e.g. First smile"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+      <h1 className="mb-4 text-2xl font-semibold">Milestones</h1>
+      <div className="mb-6 flex flex-wrap items-end gap-3">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="milestone-date">Date</Label>
+          <Input id="milestone-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-40" />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="milestone-description">Milestone</Label>
+          <Input
+            id="milestone-description"
+            placeholder="e.g. First smile"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-48"
+          />
+        </div>
+        <Input
+          type="file"
+          accept="image/*"
+          ref={fileRef}
+          className="h-auto w-56 py-1.5 file:mr-2 file:rounded-md file:border-0 file:bg-muted file:px-2 file:py-1"
         />
-        <input type="file" accept="image/*" ref={fileRef} />
-        <button onClick={submit} disabled={!description.trim()}>
+        <Button onClick={submit} disabled={!description.trim()}>
           Add
-        </button>
+        </Button>
       </div>
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <ul className="divide-y divide-border">
         {items.map((m) => (
-          <li key={m.id} style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
+          <li key={m.id} className="py-3 text-sm">
             <strong>{m.date}</strong>: {m.description}{" "}
-            <span style={{ opacity: 0.7 }}>· {caregiverName(m.loggedByCaregiverId)}</span>
+            <span className="text-muted-foreground">· {caregiverName(m.loggedByCaregiverId)}</span>
             {m.photoRef && (
-              <div>
-                <img src={m.photoRef} alt={m.description} style={{ maxWidth: 200, marginTop: 4 }} />
+              <div className="mt-1">
+                <img src={m.photoRef} alt={m.description} className="max-w-[200px] rounded-md" />
               </div>
             )}
           </li>

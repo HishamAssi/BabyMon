@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Milk, Baby, Moon, type LucideIcon } from "lucide-react";
 import { getStatusSummary, formatElapsed, type StatusSummary } from "../data/statusSummary.js";
 import { getInProgressSleep } from "../data/careEvents.js";
 import { onSyncUpdate } from "../data/syncClient.js";
@@ -7,10 +8,10 @@ import { loadCaregivers } from "../data/caregivers.js";
 import SleepStatus from "../components/SleepStatus.js";
 import type { CareEvent } from "../data/db.js";
 
-const LABEL: Partial<Record<StatusSummary["type"], string>> = {
-  feed: "🍼 Last feed",
-  diaper: "🧷 Last diaper",
-  sleep: "😴 Last sleep ended"
+const LABEL: Partial<Record<StatusSummary["type"], { text: string; icon: LucideIcon }>> = {
+  feed: { text: "Last feed", icon: Milk },
+  diaper: { text: "Last diaper", icon: Baby },
+  sleep: { text: "Last sleep ended", icon: Moon }
 };
 
 /** T034 — FR-008, SC-005: at-a-glance status without scrolling. */
@@ -29,18 +30,25 @@ export default function BabyStatus() {
     return onSyncUpdate(refresh);
   }, [babyId]);
 
-  if (!babyId) return <p>Join a baby profile first (see Invite page).</p>;
+  if (!babyId) return <p className="text-muted-foreground">Join a baby profile first (see Invite page).</p>;
 
   return (
     <div>
-      <h1>Baby status</h1>
+      <h1 className="mb-4 text-2xl font-semibold">Baby status</h1>
       <SleepStatus inProgress={sleeping} />
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {summary.map((s) => (
-          <li key={s.type} style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}>
-            {LABEL[s.type]}: <strong>{formatElapsed(s.lastAt)}</strong>
-          </li>
-        ))}
+      <ul className="divide-y divide-border">
+        {summary.map((s) => {
+          const entry = LABEL[s.type];
+          if (!entry) return null;
+          const Icon = entry.icon;
+          return (
+            <li key={s.type} className="flex items-center gap-3 py-3">
+              <Icon className="size-5 text-muted-foreground" />
+              <span className="flex-1 text-sm">{entry.text}</span>
+              <strong className="text-sm font-semibold">{formatElapsed(s.lastAt)}</strong>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

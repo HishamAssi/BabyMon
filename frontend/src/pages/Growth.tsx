@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { api, getActiveBabyId } from "../data/apiClient.js";
 import { caregiverName, loadCaregivers } from "../data/caregivers.js";
+import { Button } from "../components/ui/button.js";
+import { Input } from "../components/ui/input.js";
+import { Label } from "../components/ui/label.js";
 
 interface GrowthMeasurement {
   id: string;
@@ -44,25 +47,39 @@ export default function Growth() {
     refresh();
   }
 
-  if (!babyId) return <p>Join a baby profile first.</p>;
+  if (!babyId) return <p className="text-muted-foreground">Join a baby profile first.</p>;
 
   return (
     <div>
-      <h1>Growth</h1>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-        <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
-        <input placeholder="Weight (kg)" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} />
-        <input placeholder="Length (cm)" value={lengthCm} onChange={(e) => setLengthCm(e.target.value)} />
-        <input placeholder="Head (cm)" value={headCm} onChange={(e) => setHeadCm(e.target.value)} />
-        <button onClick={submit}>Add measurement</button>
+      <h1 className="mb-4 text-2xl font-semibold">Growth</h1>
+      <div className="mb-6 flex flex-wrap items-end gap-3">
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="growth-date">Date</Label>
+          <Input id="growth-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-40" />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="growth-weight">Weight (kg)</Label>
+          <Input id="growth-weight" value={weightKg} onChange={(e) => setWeightKg(e.target.value)} className="w-28" />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="growth-length">Length (cm)</Label>
+          <Input id="growth-length" value={lengthCm} onChange={(e) => setLengthCm(e.target.value)} className="w-28" />
+        </div>
+        <div className="flex flex-col gap-1.5">
+          <Label htmlFor="growth-head">Head (cm)</Label>
+          <Input id="growth-head" value={headCm} onChange={(e) => setHeadCm(e.target.value)} className="w-28" />
+        </div>
+        <Button onClick={submit}>Add measurement</Button>
       </div>
-      <ul style={{ listStyle: "none", padding: 0 }}>
+      <ul className="divide-y divide-border">
         {measurements.map((m) => (
-          <li key={m.id} style={{ padding: "6px 0", borderBottom: "1px solid #eee" }}>
-            {m.date}: {m.weight ? `${(m.weight / 1000).toFixed(2)}kg ` : ""}
+          <li key={m.id} className="py-2 text-sm">
+            <span className="font-medium">{m.date}</span>
+            {": "}
+            {m.weight ? `${(m.weight / 1000).toFixed(2)}kg ` : ""}
             {m.length ? `${(m.length / 10).toFixed(1)}cm long ` : ""}
             {m.headCircumference ? `${(m.headCircumference / 10).toFixed(1)}cm head ` : ""}
-            <span style={{ opacity: 0.7 }}>· {caregiverName(m.loggedByCaregiverId)}</span>
+            <span className="text-muted-foreground">· {caregiverName(m.loggedByCaregiverId)}</span>
           </li>
         ))}
       </ul>
