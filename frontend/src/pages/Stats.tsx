@@ -3,6 +3,7 @@ import { getStats, type StatsPeriod, type StatsResult } from "../data/stats.js";
 import { onSyncUpdate } from "../data/syncClient.js";
 import { getActiveBabyId } from "../data/apiClient.js";
 import { SummaryStatCards, DailyCountsChart, SleepHoursChart } from "../components/StatsCharts.js";
+import { Tabs, TabsList, TabsTrigger } from "../components/ui/tabs.js";
 
 const PERIODS: { value: StatsPeriod; label: string }[] = [
   { value: "day", label: "Day" },
@@ -33,25 +34,22 @@ export default function Stats() {
     return onSyncUpdate(refresh);
   }, [refresh]);
 
-  if (!babyId) return <p>Join a baby profile first (see Invite page).</p>;
-  if (!result) return <p>Loading…</p>;
+  if (!babyId) return <p className="text-muted-foreground">Join a baby profile first (see Invite page).</p>;
+  if (!result) return <p className="text-muted-foreground">Loading…</p>;
 
   return (
     <div>
-      <h1>Stats</h1>
-      <div role="group" aria-label="Time period" style={{ display: "flex", gap: 8, marginBottom: 8 }}>
-        {PERIODS.map((p) => (
-          <button
-            key={p.value}
-            aria-pressed={period === p.value}
-            onClick={() => setPeriod(p.value)}
-            style={period === p.value ? { fontWeight: "bold", background: "#e0e0e0" } : undefined}
-          >
-            {p.label}
-          </button>
-        ))}
-      </div>
-      <p style={{ opacity: 0.7, marginTop: 0 }}>{formatRange(result)}</p>
+      <h1 className="mb-4 text-2xl font-semibold">Stats</h1>
+      <Tabs value={period} onValueChange={(v) => setPeriod(v as StatsPeriod)} className="mb-2">
+        <TabsList aria-label="Time period">
+          {PERIODS.map((p) => (
+            <TabsTrigger key={p.value} value={p.value}>
+              {p.label}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+      </Tabs>
+      <p className="mb-4 text-sm text-muted-foreground">{formatRange(result)}</p>
 
       <SummaryStatCards totals={result.totals} averagesPerDay={result.averagesPerDay} />
 

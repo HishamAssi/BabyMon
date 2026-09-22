@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../data/apiClient.js";
+import { Button } from "../components/ui/button.js";
+import { Input } from "../components/ui/input.js";
+import { Label } from "../components/ui/label.js";
+import { Alert, AlertDescription } from "../components/ui/alert.js";
 
 /**
  * First-run bootstrap UI (backs T010's backend). Creates the household +
@@ -29,20 +33,24 @@ export default function Setup() {
 
   return (
     <div>
-      <h1>Welcome to BabyMon</h1>
-      <p>Let&rsquo;s set up your baby&rsquo;s shared profile.</p>
-      <label>
-        Baby&rsquo;s name
-        <input value={babyName} onChange={(e) => setBabyName(e.target.value)} />
-      </label>
-      <label>
-        Birthdate
-        <input type="date" value={babyBirthdate} onChange={(e) => setBabyBirthdate(e.target.value)} />
-      </label>
-      <button onClick={submit} disabled={!babyName.trim() || !babyBirthdate}>
+      <h1 className="mb-2 text-2xl font-semibold">Welcome to BabyMon</h1>
+      <p className="mb-4 text-muted-foreground">Let&rsquo;s set up your baby&rsquo;s shared profile.</p>
+      <div className="mb-4 flex flex-col gap-1.5">
+        <Label htmlFor="setup-name">Baby&rsquo;s name</Label>
+        <Input id="setup-name" value={babyName} onChange={(e) => setBabyName(e.target.value)} />
+      </div>
+      <div className="mb-4 flex flex-col gap-1.5">
+        <Label htmlFor="setup-birthdate">Birthdate</Label>
+        <Input id="setup-birthdate" type="date" value={babyBirthdate} onChange={(e) => setBabyBirthdate(e.target.value)} />
+      </div>
+      <Button onClick={submit} disabled={!babyName.trim() || !babyBirthdate}>
         Create profile
-      </button>
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
+      </Button>
+      {error && (
+        <Alert variant="destructive" className="mt-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
     </div>
   );
 }

@@ -1,11 +1,27 @@
+import { Milk, Baby, Moon, GlassWater, type LucideIcon } from "lucide-react";
 import type { CareEvent } from "../data/db.js";
 import { caregiverName } from "../data/caregivers.js";
+import { Badge, type BadgeProps } from "./ui/badge.js";
 
 const TYPE_LABEL: Record<CareEvent["type"], string> = {
   feed: "Feeding",
   diaper: "Diaper change",
   sleep: "Sleep",
   pumping: "Pumping"
+};
+
+const TYPE_ICON: Record<CareEvent["type"], LucideIcon> = {
+  feed: Milk,
+  diaper: Baby,
+  sleep: Moon,
+  pumping: GlassWater
+};
+
+const TYPE_BADGE_VARIANT: Record<CareEvent["type"], BadgeProps["variant"]> = {
+  feed: "feed",
+  diaper: "diaper",
+  sleep: "sleep",
+  pumping: "pumping"
 };
 
 const DIAPER_LABEL: Record<NonNullable<CareEvent["diaperContents"]>, string> = {
@@ -41,30 +57,37 @@ function eventDetail(e: CareEvent): string {
 /** FR-005/FR-007 — merged, attributed rendering of care events. */
 export default function EventList({ events }: { events: CareEvent[] }) {
   if (events.length === 0) {
-    return <p>No events logged yet.</p>;
+    return <p className="text-muted-foreground">No events logged yet.</p>;
   }
   return (
-    <ul aria-label="Care event timeline" style={{ listStyle: "none", padding: 0 }}>
+    <ul aria-label="Care event timeline" className="divide-y divide-border">
       {events.map((e) => {
         const detail = eventDetail(e);
+        const Icon = TYPE_ICON[e.type];
         return (
           <li
             key={e.id}
             aria-label={`${TYPE_LABEL[e.type]} logged by ${caregiverName(e.loggedByCaregiverId)}`}
-            style={{ padding: "8px 0", borderBottom: "1px solid #eee" }}
+            className="flex items-start gap-3 py-3"
           >
-            <strong>{TYPE_LABEL[e.type]}</strong>
-            {detail ? ` (${detail})` : ""}
-            {e.type === "sleep" && !e.endTime ? " (in progress)" : ""}
-            <div style={{ fontSize: "0.85em", opacity: 0.75 }}>
-              {formatTime(e.startTime)}
-              {e.endTime ? ` – ${formatTime(e.endTime)}` : ""} · logged by{" "}
-              {caregiverName(e.loggedByCaregiverId)}
-              {e.lastModifiedByCaregiverId !== e.loggedByCaregiverId
-                ? ` · edited by ${caregiverName(e.lastModifiedByCaregiverId)}`
-                : ""}
+            <Icon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="font-medium">{TYPE_LABEL[e.type]}</span>
+                {detail ? <Badge variant={TYPE_BADGE_VARIANT[e.type]}>{detail}</Badge> : null}
+                {e.type === "sleep" && !e.endTime ? (
+                  <Badge variant="secondary">in progress</Badge>
+                ) : null}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {formatTime(e.startTime)}
+                {e.endTime ? ` – ${formatTime(e.endTime)}` : ""} · logged by {caregiverName(e.loggedByCaregiverId)}
+                {e.lastModifiedByCaregiverId !== e.loggedByCaregiverId
+                  ? ` · edited by ${caregiverName(e.lastModifiedByCaregiverId)}`
+                  : ""}
+              </div>
+              {e.notes ? <div className="text-sm">{e.notes}</div> : null}
             </div>
-            {e.notes ? <div style={{ fontSize: "0.9em" }}>{e.notes}</div> : null}
           </li>
         );
       })}
